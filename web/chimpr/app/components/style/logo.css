@@ -1,0 +1,23 @@
+@import url('https://fonts.googleapis.com/css2?family=Permanent+Marker&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
+
+.logo {
+    padding: 3px;
+    border-color: transparent transparent transparent #ff3562;
+    border-width: 4px;
+    margin: 2px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: fit-content;
+}
+
+.logo-text {
+    font-family: 'Permanent Marker';
+    font-size: 3vh;
+    margin-left: 2px;
+}
+
+img {
+    height: 4vh;
+    width: auto;
+}
