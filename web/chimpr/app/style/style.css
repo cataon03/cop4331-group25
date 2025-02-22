@@ -69,22 +69,55 @@ button:active {
 }
 
 .login-side {
-    color: white;
     flex: 1;
+    display: flex;
+    position: relative;
+}
+
+.login-side-movable-div {
+    color: white;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     background-color: #09f;
     box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;
-    margin:10px;
-    border-radius: 10px;
+    border-radius: 2px;
     gap: 4vh;
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    transition: 1s;
 }
 
-.login-side > img {
+.login-side-movable-div > img {
     height: 40vh;
     width: auto;
+}
+
+.sign-up {
+    flex: 1;
+    display: flex;
+    height: 100%;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 3vh;
+}
+
+.sign-up-btn {
+    border-radius: 10px;
+    height: fill;
+    color: white;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.sign-up-btn > img {
+   height: 10vh !important;
 }
 
 .header-text {
@@ -92,6 +125,12 @@ button:active {
     font-size: 3vh;
     font-weight: bold;
     font-family: 'Roboto'
+}
+
+.transform {
+    transform: translateX(-100%);
+    transition: 1s;
+    z-index: 1000;
 }
 
 .bg {

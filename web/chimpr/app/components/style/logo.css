@@ -9,6 +9,7 @@
     flex-direction: row;
     align-items: center;
     width: fit-content;
+    z-index: 99999;
 }
 
 .logo-text {
