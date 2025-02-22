@@ -109,15 +109,18 @@ button:active {
 .sign-up-btn {
     border-radius: 10px;
     height: fill;
+    width: fill;
     color: white;
     padding: 20px;
+    height: 20vh;
     display: flex;
     align-items: center;
     justify-content: center;
+    flex-direction: column;
 }
 
 .sign-up-btn > img {
-   height: 10vh !important;
+   height: 10vh;
 }
 
 .header-text {
