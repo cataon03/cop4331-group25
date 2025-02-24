@@ -13,7 +13,7 @@ export enum PageType {
 
 export default function MainIsland() {
 
-    const [curPage, setCurPage] = useState(PageType.SIGN_UP_STUDENT);
+    const [curPage, setCurPage] = useState(PageType.LOGIN);
 
     const CurrentPage = () => {
         switch(curPage) {

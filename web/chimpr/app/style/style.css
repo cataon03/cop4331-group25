@@ -88,6 +88,7 @@ button:active {
     height: 100%;
     width: 100%;
     transition: 1s;
+    z-index: 90;
 }
 
 .login-side-movable-div > img {
