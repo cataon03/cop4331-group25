@@ -26,17 +26,17 @@
     flex: 1;
     display: flex;
     flex-direction: column;
-    gap: 2vh;
+    gap: 1%;
 }
 
 .s-i-right {
     flex: 1;
     display: flex;
     flex-direction: column;
-    gap: 2vh;
-    margin-top: 6.5vh;
-    margin-left: 1vh;
-    margin-right: 1vh;
+    gap: 6%;
+    margin-top: 7%;
+    margin-left: 1%;
+    margin-right: 1%;
 }
 
 .go-back-btn {

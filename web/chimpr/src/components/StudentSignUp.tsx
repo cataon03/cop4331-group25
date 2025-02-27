@@ -6,7 +6,6 @@ import { PageType } from '../MainIsland';
 import InputFileUpload from './FileUpload';
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import zIndex from '@mui/material/styles/zIndex';
 import { useState } from 'react';
 
 export default function StudentSignUp(props: any) {
@@ -37,7 +36,7 @@ export default function StudentSignUp(props: any) {
                         </div>
 
                         <p>Graduation Date</p>
-                        <div className='text-buddies' style={{gap: '6vh'}}>
+                        <div className='text-buddies' style={{gap: '6%'}}>
                             <LocalizationProvider dateAdapter={AdapterDayjs}>
                                 <DatePicker />
                             </LocalizationProvider>

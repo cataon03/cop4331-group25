@@ -1,5 +1,3 @@
-"use client";
-
 import { Button, Checkbox, FormControlLabel, TextField } from '@mui/material';
 import {PageType} from '../MainIsland';
 import Logo from './logo';
@@ -65,16 +63,16 @@ export default function Login(props: any) {
                 <div className="sign-up">
                     <p className='header-text' style={{color: 'black'}}>Sign Up</p>
                     <p style={{fontSize: '2vh'}}>Which Best Describes You?</p>
-                    <Button style={{width: '70%'}} variant='contained' onClick={handleStudentSignUp}>
+                    <Button style={{width: '70%', height: '25%'}} variant='contained' onClick={handleStudentSignUp}>
                         <div className='sign-up-btn'>
-                            <img style={{height: '10vh', alignSelf: 'center'}} src={StudentMonkey.src}></img>
+                            <img style={{height: '10vh', alignSelf: 'center'}} src={StudentMonkey}></img>
                             <p>I'm A Student</p>
                         </div>
                     </Button>
                     
-                    <Button style={{width: '70%'}} variant='contained' onClick={handleRecruiterSignUp}>
+                    <Button style={{width: '70%', height: '25%'}} variant='contained' onClick={handleRecruiterSignUp}>
                         <div className='sign-up-btn'>
-                            <img style={{height: '10vh', alignSelf: 'center'}} src={RecruiterMonkey.src}></img>
+                            <img style={{height: '10vh', alignSelf: 'center'}} src={RecruiterMonkey}></img>
                             <p>I'm A Recruiter</p>
                         </div>
                     </Button>
@@ -85,7 +83,7 @@ export default function Login(props: any) {
                 
                 {/* overlay */}
                 <div className={"login-side-movable-div " + (!signUpCovered ? "" : ", transform")}>
-                    <img src={BusinessMonkey.src}/>
+                    <img src={BusinessMonkey}/>
                     <div style={{textAlign: 'center'}}>
                         <p className='header-text'>Welome To The Future of Recruiting</p>
                         <p>We put the fair in career fair</p>

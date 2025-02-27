@@ -1,5 +1,3 @@
-"use client";
-
 import './style/style.css';
 import Login from "./components/login";
 import { useState } from 'react';

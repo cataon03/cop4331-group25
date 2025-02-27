@@ -56,6 +56,7 @@ button:active {
     flex: 1;
     display: flex;
     flex-direction: column;
+    margin:0px;
 }
 
 .login-area {
@@ -65,7 +66,8 @@ button:active {
     justify-content: center;
     height: 100%;
     width: 100%;
-    gap: 3vh;
+    gap: 5%;
+    margin-top: 0px;
 }
 
 .login-side {
@@ -104,7 +106,7 @@ button:active {
     align-items: center;
     justify-content: center;
     flex-direction: column;
-    gap: 3vh;
+    gap: 2%;
 }
 
 .sign-up-btn {
