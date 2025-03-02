@@ -2,9 +2,10 @@
 
 import { Button } from "@mui/material";
 import Logo from "../components/logo";
-import RecruiterLanding from "./recruiter/RecruiterLanding";
+import RecruiterLanding, { RecruiterPageType } from "./recruiter/RecruiterLanding";
 import './style/LandingRouter.css'
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 
 export default function LandingRouter() {
 
@@ -21,6 +22,17 @@ export default function LandingRouter() {
         navigate('/');
     }
 
+
+    // recruiter stuff.
+    const [recruiterInitialPageType, setRecruiterInitialPageType] = useState(RecruiterPageType.WELCOME);
+    const handleJobsBtnClick = () => {
+        setRecruiterInitialPageType(RecruiterPageType.JOBS);
+    }
+
+    const handleEventsBtnClick = () => {
+        setRecruiterInitialPageType(RecruiterPageType.EVENTS);
+    }
+
     return (
         <div className="landing-wrapper">
             <div className="landing-header">
@@ -31,8 +43,8 @@ export default function LandingRouter() {
                     {isRecruiter 
                         ? 
                             <>
-                                <Button sx={NavBtnStyle}>Jobs</Button>
-                                <Button sx={NavBtnStyle}>Upcoming Events</Button>
+                                <Button onClick={handleJobsBtnClick}   sx={NavBtnStyle}>Jobs</Button>
+                                <Button onClick={handleEventsBtnClick} sx={NavBtnStyle}>Upcoming Events</Button>
                             </> 
                         : 
                             <>
@@ -53,7 +65,7 @@ export default function LandingRouter() {
             <div className="landing-content">
                 {
                     // determine user type
-                    <RecruiterLanding/>
+                    <RecruiterLanding page={recruiterInitialPageType} setPage={setRecruiterInitialPageType}/>
                 }
             </div>
         </div>

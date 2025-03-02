@@ -1,6 +1,6 @@
-import { useState } from 'react';
 import './style/RecruiterLanding.css';
 import RecruiterWelcome from './components/RecruiterWelcome';
+import RecruiterJobs from './components/RecruiterJobs';
 
 export enum RecruiterPageType {
     WELCOME = 0,
@@ -9,18 +9,20 @@ export enum RecruiterPageType {
     EVENTS  = 3
 }
 
-export default function RecruiterLanding() {
+export default function RecruiterLanding(props: any) {
 
-    const [curPage, setCurPage] = useState(RecruiterPageType.WELCOME);
+    const curPage    = props.page;
+    const setCurPage = props.setPage;
+    
     switch(curPage) {
         case RecruiterPageType.WELCOME:
             return <RecruiterWelcome setCurPage={setCurPage}/>
         case RecruiterPageType.ABOUT:
-            return <></>;
+            return <RecruiterWelcome setCurPage={setCurPage}/>
         case RecruiterPageType.JOBS:
-            return <></>;
+            return <RecruiterJobs setCurPage={setCurPage}/>
         case RecruiterPageType.EVENTS:
-            return <></>;
+            return <><h1>Events</h1></>;
         default:
             return <></>;
     }
