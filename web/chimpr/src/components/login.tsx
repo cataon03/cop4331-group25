@@ -6,6 +6,7 @@ import RecruiterMonkey from './style/img/letter.png';
 import StudentMonkey from './style/img/university.png';
 import { useState } from 'react';
 import {doLogin} from '../api/api';
+import { useNavigate } from 'react-router-dom';
 
 export default function Login(props: any) {
 
@@ -14,6 +15,8 @@ export default function Login(props: any) {
     const [password, setPassword]         = useState('');
 
     const [signUpCovered, setSignUpCovered] = useState(false);
+
+    const navigate = useNavigate();
 
     /**
      * Performs the login operation.
@@ -24,6 +27,9 @@ export default function Login(props: any) {
             return;
         doLogin(username, password).then((res) => {
             console.log(res);
+
+            // add some logic to determine if login was successful, then route.
+            navigate('/home')
         })
     }
 
