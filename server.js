@@ -5,7 +5,7 @@ const bodyParser = require('body-parser');
 const app = express();
 app.use(bodyParser.json());
 
-const mongoURI = ''; 
+const mongoURI = 'mongodb+srv://root:COP4331@cluster0.a7mcq.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0'; 
 let client;
 
 async function connectToMongoDB() {
@@ -21,10 +21,10 @@ async function connectToMongoDB() {
 
 
 app.post('/api/signup', async (req, res) => {
-    const { LinkedIn, Company, Name } = req.body;
+    const { LinkedIn, Company, Name, Email, Password } = req.body;
 
-    if (!LinkedIn || !Company || !Name) {
-        return res.status(400).json({ error: 'All fields (LinkedIn, Company, Name) are required.' });
+    if (!LinkedIn || !Company || !Name || !Email || !Password ) {
+        return res.status(400).json({ error: 'All fields (LinkedIn, Company, Name, Email, and Password ) are required.' });
     }
 
     try {
@@ -36,7 +36,9 @@ app.post('/api/signup', async (req, res) => {
             LinkedIn,
             Company,
             Events: [], 
-            Name
+            Name,
+            Email,
+            Password
         };
 
         const result = await recruitersCollection.insertOne(newRecruiter);
@@ -46,7 +48,9 @@ app.post('/api/signup', async (req, res) => {
             LinkedIn,
             Company,
             Events: [],
-            Name
+            Name,
+            Email,
+            Password
         });
     } catch (error) {
         console.error('Error during signup:', error);
