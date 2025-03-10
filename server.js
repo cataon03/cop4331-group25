@@ -5,7 +5,7 @@ const bodyParser = require('body-parser');
 const app = express();
 app.use(bodyParser.json());
 
-const mongoURI = ''; 
+const mongoURI = 'mongodb+srv://root:COP4331@cluster0.a7mcq.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0'; 
 let client;
 
 async function connectToMongoDB() {
@@ -160,6 +160,100 @@ app.post('/api/login', async (req, res, next) => {
     } catch (error) {
         console.error('Login error:', error);
         res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+//POST Create a new job
+app.post('/api/jobs', async (req, res) => {
+    const { Title, Skills, Type } = req.body;
+
+    // if (!Title || !Skills || !Type) {
+    //     return res.status(400).json({ error: 'All fields (Title, Skills, Type) are required.' });
+    // }
+    // if (!Array.isArray(Skills)) {
+    //     return res.status(400).json({ error: 'Skills must be an array.' });
+    // }
+    // if (!['Internship', 'Full Time'].includes(Type)) {
+    //     return res.status(400).json({ error: 'Type must be either "Internship" or "Full Time".' });
+    // }
+
+    try {
+        const db = client.db('RecruitmentSystem');
+        const jobsCollection = db.collection('Jobs');
+
+        const newJob = {
+            Title,
+            Skills,
+            Type
+        };
+
+        const result = await jobsCollection.insertOne(newJob);
+
+        res.status(201).json({
+            _id: result.insertedId,
+            Title,
+            Skills,
+            Type
+        });
+    } catch (error) {
+        console.error('Error creating job:', error);
+        res.status(500).json({ error: 'An error occurred while creating the job.' });
+    }
+});
+
+// PUT update a job
+app.put('/api/jobs/:id', async (req, res) => {
+    const { id } = req.params;
+    const { Title, Skills, Type } = req.body;
+
+    // if (!Title || !Skills || !Type) {
+    //     return res.status(400).json({ error: 'All fields (Title, Skills, Type) are required.' });
+    // }
+    // if (!Array.isArray(Skills)) {
+    //     return res.status(400).json({ error: 'Skills must be an array.' });
+    // }
+    // if (!['Internship', 'Full Time'].includes(Type)) {
+    //     return res.status(400).json({ error: 'Type must be either "Internship" or "Full Time".' });
+    // }
+
+    try {
+        const db = client.db('RecruitmentSystem');
+        const jobsCollection = db.collection('Jobs');
+
+        const result = await jobsCollection.updateOne(
+            { _id: new ObjectId(id) },
+            { $set: { Title, Skills, Type } }
+        );
+
+        if (result.matchedCount === 0) {
+            return res.status(404).json({ error: 'Job not found.' });
+        }
+
+        res.status(200).json({ message: 'Job updated successfully.' });
+    } catch (error) {
+        console.error('Error updating job:', error);
+        res.status(500).json({ error: 'An error occurred while updating the job.' });
+    }
+});
+
+// DELETE delete a job
+app.delete('/api/jobs/:id', async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        const db = client.db('RecruitmentSystem');
+        const jobsCollection = db.collection('Jobs');
+
+        const result = await jobsCollection.deleteOne({ _id: new ObjectId(id) });
+
+        if (result.deletedCount === 0) {
+            return res.status(404).json({ error: 'Job not found.' });
+        }
+
+        res.status(200).json({ message: 'Job deleted successfully.' });
+    } catch (error) {
+        console.error('Error deleting job:', error);
+        res.status(500).json({ error: 'An error occurred while deleting the job.' });
     }
 });
 
