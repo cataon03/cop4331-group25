@@ -1,9 +1,17 @@
+const qr = require('qr-image');
+const fs = require('fs');
 const express = require('express');
 const { MongoClient } = require('mongodb');
 const bodyParser = require('body-parser');
 
 const app = express();
 app.use(bodyParser.json());
+
+// Create directories for storing qr code
+const QR_DIR = './qr_codes';
+const TXT_DIR = './text_files';
+fs.mkdirSync(QR_DIR, { recursive: true });
+fs.mkdirSync(TXT_DIR, { recursive: true });
 
 const mongoURI = 'mongodb+srv://root:COP4331@cluster0.a7mcq.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0'; 
 let client;
@@ -256,6 +264,50 @@ app.delete('/api/jobs/:id', async (req, res) => {
         res.status(500).json({ error: 'An error occurred while deleting the job.' });
     }
 });
+
+app.post('/api/generate-qr', async (req, res) => {
+    try {
+      // Validate and parse user ID
+      const userId = Number(req.body.userId);
+      if (isNaN(userId)) {
+        return res.status(400).json({ error: 'Valid numeric userId required' });
+      }
+  
+      const qrCodeData = userId.toString();
+      const qrFilename = `${QR_DIR}/qr_${userId}.png`;
+      const txtFilename = `${TXT_DIR}/user_${userId}.txt`;
+  
+      // Generate QR code
+      const qrStream = qr.image(qrCodeData, { type: 'png' });
+      const writeStream = fs.createWriteStream(qrFilename);
+      
+      qrStream.pipe(writeStream);
+  
+      // Wait for file write to complete
+      await new Promise((resolve, reject) => {
+        writeStream.on('finish', resolve);
+        writeStream.on('error', reject);
+      });
+  
+      // Create text file with user ID
+      await fs.promises.writeFile(txtFilename, qrCodeData);
+  
+      res.json({
+        success: true,
+        message: 'QR code generated successfully',
+        qrImage: `/qr_codes/qr_${userId}.png`,
+        textFile: `/text_files/user_${userId}.txt`
+      });
+  
+    } catch (error) {
+      console.error('Error:', error);
+      res.status(500).json({ error: 'Internal server error' });
+    }
+  });
+  
+  // Serve generated files
+  app.use('/qr_codes', express.static(QR_DIR));
+  app.use('/text_files', express.static(TXT_DIR));
 
 const PORT = process.env.PORT || 5001;
 app.listen(PORT, async () => {
