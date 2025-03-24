@@ -101,6 +101,7 @@ const StudentProfile: React.FC = () => {
               >
                 <option value="Spring">Spring</option>
                 <option value="Fall">Fall</option>
+                <option value="Summer">Summer</option>
               </select>
               <input
                 type="number"
