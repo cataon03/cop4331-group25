@@ -51,11 +51,14 @@ const StudentProfile: React.FC = () => {
 
   return (
     <div className="student-container">
+      {/* Left Card Section */}
+      <div className="profile-card">
         <h1 className="student-title">Welcome to the student portal</h1>
         <img src={StudentImage} alt="Student Portal" className="student-image" />
-
-      <div className="form-container">
-        <div className="form-group">
+  
+        <div className="form-container">
+          {/* Keep all existing form groups */}
+          <div className="form-group">
           <label>Name:</label>
           {isEditing ? (
             <div className="name-inputs">
@@ -123,7 +126,6 @@ const StudentProfile: React.FC = () => {
             <span className="student-info">{studentData.Bio}</span>
           )}
         </div>
-
         <button 
           onClick={isEditing ? handleSave : () => setIsEditing(true)}
           className="student-button"
@@ -132,7 +134,11 @@ const StudentProfile: React.FC = () => {
         </button>
       </div>
     </div>
-  );
+
+    {/* Right Space Reserved */}
+    <div className="right-space"></div>
+  </div>
+);
 };
 
 export default StudentProfile;
