@@ -13,7 +13,7 @@ const TXT_DIR = './text_files';
 fs.mkdirSync(QR_DIR, { recursive: true });
 fs.mkdirSync(TXT_DIR, { recursive: true });
 
-const mongoURI = ''; 
+const mongoURI = 'mongodb+srv://root:COP4331@cluster0.a7mcq.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0'; 
 let client;
 
 async function connectToMongoDB() {
@@ -157,13 +157,26 @@ app.post('/api/login', async (req, res, next) => {
             return res.status(401).json({ error: 'Invalid Email or Password' });
         }
 
-        res.status(200).json({
-            ID: user._id,
-            FirstName: user.FirstName,
-            LastName: user.LastName,
-            Role: role,
-            Error: ''
-        });
+        // ---- Changed this part ---- //
+        if (role === 'Recruiter') {
+            res.status(200).json({
+                ID: user._id,
+                FirstName: user.FirstName,
+                LastName: user.LastName,
+                Events: user.Events,
+                Role: role,
+                Error: ''
+            });
+        } else {
+            res.status(200).json({
+                ID: user._id,
+                FirstName: user.FirstName,
+                LastName: user.LastName,
+                Role: role,
+                Error: ''
+            });
+        }
+        // --------------------------- //
 
     } catch (error) {
         console.error('Login error:', error);
@@ -267,10 +280,13 @@ app.delete('/api/jobs/:id', async (req, res) => {
 
 app.post('/api/generate-qr', async (req, res) => {
     try {
-      // Validate and parse user ID
-      const userId = Number(req.body.userId);
-      if (isNaN(userId)) {
-        return res.status(400).json({ error: 'Valid numeric userId required' });
+
+      // user is a json object, so need to extract the string
+      const user = req.body;
+      const userId = user.userId;
+
+      if (!userId || typeof userId !== 'string') {
+        return res.status(400).json({ error: 'Valid string userId required' });
       }
   
       const qrCodeData = userId.toString();
@@ -308,6 +324,123 @@ app.post('/api/generate-qr', async (req, res) => {
   // Serve generated files
   app.use('/qr_codes', express.static(QR_DIR));
   app.use('/text_files', express.static(TXT_DIR));
+
+// ----------- My stuff ----------- //
+const formData = require('form-data');
+const Mailgun = require('mailgun.js');
+const mailgun = new Mailgun(formData);
+const crypto = require("crypto");
+const { type } = require('os');
+
+const DOMAIN = "sandboxffd663da750e4759a2292c5b508a091a.mailgun.org"
+const mg = mailgun.client({username: 'api', key: 'e298dd8e-34c2f0ce'});
+
+const verificationCodes = {};
+
+app.post('/api/send-reset-code', async (req, res) => {
+    const { email } = req.body;
+
+    if (!email) {
+        return res.status(401).json({ error: "Email is required." });
+    }
+
+    try {
+        const db = client.db('RecruitmentSystem');
+
+        const [studentResult, recruiterResult] = await Promise.all([
+            db.collection('Students').findOne({ Email: email }),
+            db.collection('Recruiters').findOne({ Email: email })
+        ]);
+
+        if (!studentResult && !recruiterResult) {
+            return res.status(404).json({ message: "Email not found." });
+        }
+
+        console.log("account was found");
+
+        const code = crypto.randomInt(100000, 999999).toString();
+
+        verificationCodes[email] = code;
+
+        const mailData = {
+            from: "Chimpr <postmaster@sandboxffd663da750e4759a2292c5b508a091a.mailgun.org>",
+            to: email,
+            subject: "Password Reset Code",
+            text: `Your password reset code is: ${code}.`,
+        };
+
+        console.log("attempting to send message");
+
+        mg.messages.create('sandboxffd663da750e4759a2292c5b508a091a.mailgun.org', mailData)
+            .then(body => {
+                res.json({ message: "Code sent successfully", body });
+                console.log("message was sent");
+            })
+            .catch(error => {
+                res.status(500).json({ message: "Error sending email", error });
+            });
+
+    } catch (error) {
+        console.error("Error checking email:", error);
+        res.status(500).json({ message: "Server error" });
+    }
+});
+
+app.post('/api/verify-code', (req, res) => {
+    const { email, code } = req.body;
+
+    if (verificationCodes[email] && verificationCodes[email] === code) {
+        delete verificationCodes[email];
+        return res.json({ success: true, message: "Code verified" });
+    }
+
+    res.status(400).json({ message: "Invalid code" });
+});
+
+app.post('/api/change-password', async (req, res) => {
+    const { email, password } = req.body;
+
+    if (!email || !password) {
+        return res.status(400).json({ message: "Email and/or password not found." });
+    }
+
+    try {
+        const db = client.db('RecruitmentSystem');
+
+        const [studentResult, recruiterResult] = await Promise.all([
+            db.collection('Students').findOne({ Email: email }),
+            db.collection('Recruiters').findOne({ Email: email })
+        ]);
+
+        if (!studentResult && !recruiterResult) {
+            return res.status(404).json({ message: "Email not found." });
+        }
+
+        let updateResult = null;
+        if (studentResult) {
+            updateResult = await studentsCollection.updateOne(
+                { Email: email },
+                { $set: { Password: password } }
+            );
+        } else if (recruiterResult) {
+            updateResult = await recruitersCollection.updateOne(
+                { Email: email},
+                { $set: { Password: password } }
+            );
+        }
+
+        if (!updateResult || updateResult.matchedCount === 0) {
+            return res.status(500).json({ message: "Error updatting password." });
+        }
+
+        res.json({ success: true, message: "Password changed." });
+    } catch (error) {
+        console.error("Error changing password: ", error);
+        res.status(500).json({ message: "Server error." })
+    }
+});
+
+// -------------------------------- //
 
 const PORT = process.env.PORT || 5001;
 app.listen(PORT, async () => {
