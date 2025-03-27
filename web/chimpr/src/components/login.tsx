@@ -49,7 +49,7 @@ export default function Login(props: any) {
                 <Logo />
                 <div className='login-area'>
                     {/* Login */}
-                    <p style={{color:'black'}} className='header-text'>Sign In</p>
+                    <p style={{color:'black', marginBottom: '0px'}} className='header-text'>Sign In</p>
                     <TextField onChange={(t) => setUsername(t.target.value)} required id="username-field" style={{width: '20vw'}} label="Username" />
                     
                     <div style={{display: "flex", flexDirection: "column"}}>
@@ -67,7 +67,7 @@ export default function Login(props: any) {
             <div className={"login-side"}>
                 {/* Sign up area */}
                 <div className="sign-up">
-                    <p className='header-text' style={{color: 'black'}}>Sign Up</p>
+                    <p className='header-text' style={{color: 'black', marginBottom: '0px'}}>Sign Up</p>
                     <p style={{fontSize: '2vh'}}>Which Best Describes You?</p>
                     <Button style={{width: '70%', height: '25%'}} variant='contained' onClick={handleStudentSignUp}>
                         <div className='sign-up-btn'>

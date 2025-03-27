@@ -4,7 +4,7 @@ import RecruiterMonkey from './style/img/letter.png'
 
 export default function RecruiterWelcome(props: any) {
 
-    const buttonStyle = {height: '5vh', width: '15vw', fontSize: '100%'}
+    const buttonStyle = {height: '15vh', width: '15vw', fontSize: '1em'}
 
     return (
         <div className='recruiter-welcome-wrapper'>

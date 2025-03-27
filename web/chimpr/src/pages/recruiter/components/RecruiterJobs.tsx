@@ -3,12 +3,14 @@ import './style/RecruiterJobs.css';
 import Job from '../models/Job';
 import JobWidget from './JobWidget';
 import { Button } from '@mui/material';
+import CandidateWidget from './CandidateWidget';
 
 export default function RecruiterJobs(props: any) {
 
     const [jobList, setJobList] = useState<Array<Job>>([]);
     const [selectedJob, setSelectedJob] = useState<Job>();
 
+    const candidates = ["Jon","Josh","Jack","Jayman"]
     // example data is used for now.
     useEffect(() => {
         const jList = new Array<Job>();
@@ -50,6 +52,16 @@ export default function RecruiterJobs(props: any) {
                                 </div>
                                 <Button  variant='contained'>Edit</Button>
                                 <Button sx={{backgroundColor: 'red'}}variant='contained'>Delete</Button>
+                            </div>
+                            <div className='job-card'>
+                                <p style={{fontWeight: 'bold', marginTop: '1vh'}}>Top Candidates</p>
+                                <div className='jobs-scrollview' style={{maxHeight: "22vh", gap: '1vh'}}>
+                                    {
+                                        candidates.map((c, i) => (
+                                            <CandidateWidget name={c}/>
+                                        ))
+                                    }
+                                </div>
                             </div>
                         </>
                     }

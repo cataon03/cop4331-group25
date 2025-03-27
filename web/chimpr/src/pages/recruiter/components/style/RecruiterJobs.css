@@ -5,6 +5,10 @@
     gap: 5%;
 }
 
+.jobs-ls > h1, .jobs-rs > h1 {
+    font-size: 1.5em;
+}
+
 .jobs-scrollview {
     overflow-y: scroll;
     display: flex;
@@ -28,6 +32,9 @@
 
 .jobs-rs {
     flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 1vh;
 }
 
 .job-card {
@@ -38,14 +45,17 @@
     box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 8px;
     margin-right: 2%;
     gap: 5px;
+    height: fit-content;
 }
 
 .job-card > h1 {
-    font-size: 2em;
+    font-size: 1.5em;
+    margin: 0px;
 }
 
 .job-card > p {
     font-size: 1em;
+    margin: 0px;
 }
 
 .job-skill-area {

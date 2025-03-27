@@ -19,6 +19,7 @@
     transition: 0.2s;
     border-color: transparent transparent transparent #09f;
     color: white;
+    cursor: pointer;
 }
 
 .selected:hover {
