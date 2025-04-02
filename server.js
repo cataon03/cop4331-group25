@@ -13,7 +13,7 @@ const TXT_DIR = './text_files';
 fs.mkdirSync(QR_DIR, { recursive: true });
 fs.mkdirSync(TXT_DIR, { recursive: true });
 
-const mongoURI = 'mongodb+srv://root:COP4331@cluster0.a7mcq.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0'; 
+const mongoURI = ''; 
 let client;
 
 async function connectToMongoDB() {
@@ -326,14 +326,13 @@ app.post('/api/generate-qr', async (req, res) => {
   app.use('/text_files', express.static(TXT_DIR));
 
 // ----------- My stuff ----------- //
-const formData = require('form-data');
+const FormData = require('form-data');
 const Mailgun = require('mailgun.js');
-const mailgun = new Mailgun(formData);
+const mailgun = new Mailgun(FormData);
 const crypto = require("crypto");
 const { type } = require('os');
 
-const DOMAIN = "sandboxffd663da750e4759a2292c5b508a091a.mailgun.org"
-const mg = mailgun.client({username: 'api', key: 'e298dd8e-34c2f0ce'});
+const mg = mailgun.client({username: 'api', key: process.env.API_KEY || "put_api_key_here"});
 
 const verificationCodes = {};
 
@@ -362,23 +361,16 @@ app.post('/api/send-reset-code', async (req, res) => {
 
         verificationCodes[email] = code;
 
-        const mailData = {
-            from: "Chimpr <postmaster@sandboxffd663da750e4759a2292c5b508a091a.mailgun.org>",
-            to: email,
-            subject: "Password Reset Code",
+        const data = await mg.messages.create("postmaster_email_here", {
+            from: "Chimpr <postmaster_email_here>",
+            to: [email],
+            subject: "Password Reset",
             text: `Your password reset code is: ${code}.`,
-        };
-
-        console.log("attempting to send message");
-
-        mg.messages.create('sandboxffd663da750e4759a2292c5b508a091a.mailgun.org', mailData)
-            .then(body => {
-                res.json({ message: "Code sent successfully", body });
-                console.log("message was sent");
-            })
-            .catch(error => {
-                res.status(500).json({ message: "Error sending email", error });
             });
+
+        console.log("email was sent");
+
+        return res.status(200).json({ message: "Verification code sent." });
 
     } catch (error) {
         console.error("Error checking email:", error);
@@ -406,10 +398,12 @@ app.post('/api/change-password', async (req, res) => {
 
     try {
         const db = client.db('RecruitmentSystem');
+        const studentsCollection = db.collection('Students');
+        const recruitersCollection = db.collection('Recruiters');
 
         const [studentResult, recruiterResult] = await Promise.all([
-            db.collection('Students').findOne({ Email: email }),
-            db.collection('Recruiters').findOne({ Email: email })
+            studentsCollection.findOne({ Email: email }),
+            recruitersCollection.findOne({ Email: email })
         ]);
 
         if (!studentResult && !recruiterResult) {
